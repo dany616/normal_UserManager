@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>사용자 삭제 - 사용자 관리 시스템</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <a href="/" class="logo">
+                <i class="fas fa-users"></i> User Manager
+            </a>
+            
+            <button class="hamburger" id="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+
+            <nav class="nav" id="nav">
+                <a href="/" class="nav-link"><i class="fas fa-home"></i> 홈</a>
+                <a href="/create" class="nav-link"><i class="fas fa-plus"></i> 추가</a>
+                <a href="/read" class="nav-link"><i class="fas fa-search"></i> 조회</a>
+                <a href="/update" class="nav-link"><i class="fas fa-edit"></i> 수정</a>
+                <a href="/delete" class="nav-link"><i class="fas fa-trash"></i> 삭제</a>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            <div class="form-container">
+                <h2><i class="fas fa-user-minus"></i> 사용자 삭제</h2>
+                <div class="form-group">
+                    <label for="deleteId"><i class="fas fa-id-card"></i> 삭제할 사용자 ID</label>
+                    <input type="text" id="deleteId" class="form-control" placeholder="삭제할 사용자의 ID를 입력하세요">
+                </div>
+                <button onclick="deleteUser()" class="btn btn-danger">
+                    <i class="fas fa-trash"></i> 삭제하기
+                </button>
+
+                <div id="deleteResult" class="result-message" style="display: none; margin-top: 20px;">
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // 햄버거 메뉴 토글
+        const hamburger = document.getElementById('hamburger');
+        const nav = document.getElementById('nav');
+        
+        hamburger.addEventListener('click', () => {
+            nav.classList.toggle('active');
+            hamburger.classList.toggle('active');
+        });
+
+        function deleteUser() {
+            const id = document.getElementById('deleteId').value;
+            const resultDiv = document.getElementById('deleteResult');
+            
+            if (!id) {
+                alert('ID를 입력해주세요.');
+                return;
+            }
+            
+            if (confirm('정말로 이 사용자를 삭제하시겠습니까?')) {
+                fetch(`/users/${id}/delete`)
+                    .then(response => {
+                        if (!response.ok) throw new Error('사용자를 찾을 수 없습니다.');
+                        return response.text();
+                    })
+                    .then(result => {
+                        resultDiv.style.display = 'block';
+                        resultDiv.innerHTML = `
+                            <div class="success-message">
+                                <i class="fas fa-check-circle"></i>
+                                ${result}
+                            </div>
+                        `;
+                        document.getElementById('deleteId').value = '';
+                        setTimeout(() => {
+                            window.location.href = '/';
+                        }, 1500);
+                    })
+                    .catch(error => {
+                        resultDiv.style.display = 'block';
+                        resultDiv.innerHTML = `
+                            <div class="error-message">
+                                <i class="fas fa-exclamation-circle"></i>
+                                ${error.message}
+                            </div>
+                        `;
+                    });
+            }
+        }
+    </script>
+</body>
+</html>

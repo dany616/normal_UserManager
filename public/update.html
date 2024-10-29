@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>사용자 수정 - 사용자 관리 시스템</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+    <header class="header">
+        <div class="header-content container">
+            <a href="/" class="logo">
+                <i class="fas fa-users"></i> User Manager
+            </a>
+            
+            <button class="hamburger" id="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+
+            <nav class="nav" id="nav">
+                <a href="/" class="nav-link"><i class="fas fa-home"></i> 홈</a>
+                <a href="/create" class="nav-link"><i class="fas fa-plus"></i> 추가</a>
+                <a href="/read" class="nav-link"><i class="fas fa-search"></i> 조회</a>
+                <a href="/update" class="nav-link"><i class="fas fa-edit"></i> 수정</a>
+                <a href="/delete" class="nav-link"><i class="fas fa-trash"></i> 삭제</a>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            <div class="form-container">
+                <h2><i class="fas fa-edit"></i> 사용자 수정</h2>
+                <div class="form-group">
+                    <label for="searchId"><i class="fas fa-id-card"></i> 수정할 사용자 ID</label>
+                    <input type="text" id="searchId" class="form-control" placeholder="수정할 사용자의 ID를 입력하세요">
+                    <button onclick="searchUser()" class="btn btn-primary" style="margin-top: 10px;">
+                        <i class="fas fa-search"></i> 검색
+                    </button>
+                </div>
+
+                <form id="updateForm" style="display: none;" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <label for="name"><i class="fas fa-user"></i> 이름</label>
+                        <input type="text" id="name" name="name" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="birth"><i class="fas fa-birthday-cake"></i> 생년월일</label>
+                        <input type="date" id="birth" name="birth" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label for="gender"><i class="fas fa-venus-mars"></i> 성별</label>
+                        <select id="gender" name="gender" class="form-control">
+                            <option value="">선택하세요</option>
+                            <option value="male">남성</option>
+                            <option value="female">여성</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="image"><i class="fas fa-image"></i> 새 프로필 이미지</label>
+                        <input type="file" id="image" name="image" class="form-control" accept="image/*">
+                    </div>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i> 수정하기
+                    </button>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // 햄버거 메뉴 스크립트
+
+        let currentId = '';
+
+        function searchUser() {
+            const id = document.getElementById('searchId').value;
+            currentId = id;
+            
+            fetch(`/users/${id}`)
+                .then(response => {
+                    if (!response.ok) throw new Error('사용자를 찾을 수 없습니다.');
+                    return response.json();
+                })
+                .then(user => {
+                    document.getElementById('updateForm').style.display = 'block';
+                    document.getElementById('name').value = user.name;
+                    document.getElementById('birth').value = user.birth || '';
+                    document.getElementById('gender').value = user.gender || '';
+                })
+                .catch(error => alert(error.message));
+        }
+
+        document.getElementById('updateForm').onsubmit = function(e) {
+            e.preventDefault();
+            const formData = new FormData(this);
+            
+            fetch(`/users/${currentId}`, {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.text())
+            .then(result => {
+                alert(result);
+                window.location.href = '/';
+            })
+            .catch(error => alert('수정 중 오류가 발생했습니다.'));
+        };
+    </script>
+</body>
+</html>

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>사용자 관리 시스템</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <a href="/" class="logo">
+                <i class="fas fa-users"></i> User Manager
+            </a>
+            
+            <button class="hamburger" id="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+
+            <nav class="nav" id="nav">
+                <a href="/" class="nav-link"><i class="fas fa-home"></i> 홈</a>
+                <a href="/create" class="nav-link"><i class="fas fa-plus"></i> 추가</a>
+                <a href="/read" class="nav-link"><i class="fas fa-search"></i> 조회</a>
+                <a href="/update" class="nav-link"><i class="fas fa-edit"></i> 수정</a>
+                <a href="/delete" class="nav-link"><i class="fas fa-trash"></i> 삭제</a>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            <div class="user-list" id="userList">
+                <!-- 사용자 목록이 여기에 동적으로 추가됩니다 -->
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // 햄버거 메뉴 토글
+        const hamburger = document.getElementById('hamburger');
+        const nav = document.getElementById('nav');
+        
+        hamburger.addEventListener('click', () => {
+            nav.classList.toggle('active');
+            hamburger.classList.toggle('active');
+        });
+
+        // 사용자 목록 로드
+        fetch('/users')
+            .then(response => response.json())
+            .then(users => {
+                const userList = document.getElementById('userList');
+                Object.entries(users).forEach(([id, user]) => {
+                    const card = document.createElement('div');
+                    card.className = 'user-card';
+                    card.innerHTML = `
+                        ${user.image ? 
+                            `<img src="${user.image}" class="user-image" alt="${user.name}">` : 
+                            `<div class="user-image" style="background-color: #e1e1e1; display: flex; align-items: center; justify-content: center;">
+                                <i class="fas fa-user fa-3x" style="color: #999;"></i>
+                            </div>`
+                        }
+                        <div class="user-info">
+                            <h3>${user.name}</h3>
+                            <p><i class="fas fa-id-card"></i> ${id}</p>
+                            <p><i class="fas fa-birthday-cake"></i> ${user.birth || '미입력'}</p>
+                            <p><i class="fas fa-venus-mars"></i> ${user.gender || '미입력'}</p>
+                        </div>
+                    `;
+                    userList.appendChild(card);
+                });
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                const userList = document.getElementById('userList');
+                userList.innerHTML = '<p class="error">사용자 목록을 불러오는 중 오류가 발생했습니다.</p>';
+            });
+    </script>
+</body>
+</html>

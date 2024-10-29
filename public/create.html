@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>사용자 추가 - 사용자 관리 시스템</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+    <header class="header">
+        <div class="header-content container">
+            <a href="/" class="logo">
+                <i class="fas fa-users"></i> User Manager
+            </a>
+            
+            <button class="hamburger" id="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+
+            <nav class="nav" id="nav">
+                <a href="/" class="nav-link"><i class="fas fa-home"></i> 홈</a>
+                <a href="/create" class="nav-link"><i class="fas fa-plus"></i> 추가</a>
+                <a href="/read" class="nav-link"><i class="fas fa-search"></i> 조회</a>
+                <a href="/update" class="nav-link"><i class="fas fa-edit"></i> 수정</a>
+                <a href="/delete" class="nav-link"><i class="fas fa-trash"></i> 삭제</a>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            <div class="form-container">
+                <h2><i class="fas fa-user-plus"></i> 사용자 추가</h2>
+                <form action="/users" method="POST" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <label for="id"><i class="fas fa-id-card"></i> 아이디</label>
+                        <input type="text" id="id" name="id" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="name"><i class="fas fa-user"></i> 이름</label>
+                        <input type="text" id="name" name="name" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="birth"><i class="fas fa-birthday-cake"></i> 생년월일</label>
+                        <input type="date" id="birth" name="birth" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label for="gender"><i class="fas fa-venus-mars"></i> 성별</label>
+                        <input type="radio" id="gender-man" name="gender" value="Man" checked>
+                        <label for="gender-man">남</label>
+                        <input type="radio" id="gender-woman" name="gender" value="Woman">
+                        <label for="gender-woman">여</label>
+                    </div>
+                    <div class="form-group">
+                        <label for="image"><i class="fas fa-image"></i> 이미지</label>
+                        <input type="file" id="image" name="image" class="form-control" accept="image/*">
+                    </div>
+                    <button type="submit" class="btn btn-primary"><i class="fas fa-plus"></i> 추가</button>
+                </form>
+            </div>
+        </div>
+    </main>
+</body>

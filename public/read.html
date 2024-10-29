@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>사용자 조회 - 사용자 관리 시스템</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <a href="/" class="logo">
+                <i class="fas fa-users"></i> User Manager
+            </a>
+            
+            <button class="hamburger" id="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+
+            <nav class="nav" id="nav">
+                <a href="/" class="nav-link"><i class="fas fa-home"></i> 홈</a>
+                <a href="/create" class="nav-link"><i class="fas fa-plus"></i> 추가</a>
+                <a href="/read" class="nav-link"><i class="fas fa-search"></i> 조회</a>
+                <a href="/update" class="nav-link"><i class="fas fa-edit"></i> 수정</a>
+                <a href="/delete" class="nav-link"><i class="fas fa-trash"></i> 삭제</a>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            <div class="form-container">
+                <h2><i class="fas fa-search"></i> 사용자 조회</h2>
+                <div class="form-group">
+                    <label for="searchId"><i class="fas fa-id-card"></i> 사용자 ID</label>
+                    <input type="text" id="searchId" class="form-control" placeholder="조회할 ID를 입력하세요">
+                </div>
+                <button onclick="searchUser()" class="btn btn-primary">
+                    <i class="fas fa-search"></i> 조회하기
+                </button>
+                
+                <div id="searchResult" style="display: none; margin-top: 20px;">
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // 햄버거 메뉴 토글
+        const hamburger = document.getElementById('hamburger');
+        const nav = document.getElementById('nav');
+        
+        hamburger.addEventListener('click', () => {
+            nav.classList.toggle('active');
+            hamburger.classList.toggle('active');
+        });
+        
+        function searchUser() {
+            const id = document.getElementById('searchId').value;
+            const resultDiv = document.getElementById('searchResult');
+            
+            if (!id) {
+                alert('ID를 입력해주세요.');
+                return;
+            }
+            
+            fetch(`/users/${id}`)
+                .then(response => {
+                    if (!response.ok) throw new Error('사용자를 찾을 수 없습니다.');
+                    return response.json();
+                })
+                .then(user => {
+                    resultDiv.style.display = 'block';
+                    resultDiv.innerHTML = `
+                        <div class="user-card">
+                            ${user.image ? 
+                                `<img src="${user.image}" class="user-image" alt="${user.name}">` : 
+                                `<div class="user-image" style="background-color: #e1e1e1; display: flex; align-items: center; justify-content: center;">
+                                    <i class="fas fa-user fa-3x" style="color: #999;"></i>
+                                </div>`
+                            }
+                            <div class="user-info">
+                                <h3>${user.name}</h3>
+                                <p><i class="fas fa-id-card"></i> ${id}</p>
+                                <p><i class="fas fa-birthday-cake"></i> ${user.birth || '미입력'}</p>
+                                <p><i class="fas fa-venus-mars"></i> ${user.gender || '미입력'}</p>
+                            </div>
+                        </div>
+                    `;
+                })
+                .catch(error => {
+                    resultDiv.style.display = 'block';
+                    resultDiv.innerHTML = `
+                        <div class="error-message">
+                            <i class="fas fa-exclamation-circle"></i>
+                            ${error.message}
+                        </div>
+                    `;
+                });
+        }
+    </script>
+</body>
+</html>
