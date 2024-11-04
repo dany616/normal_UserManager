@@ -50,17 +50,19 @@
     </main>
 
     <script>
-        // 햄버거 메뉴 토글
-        document.addEventListener('DOMContentLoaded', function() {
-            const hamburger = document.getElementById('hamburger');
-            const nav = document.getElementById('nav');
-            
+        // 햄버거 메뉴 초기화
+        const hamburger = document.getElementById('hamburger');
+        const nav = document.getElementById('nav');
+        
+        // 햄버거 메뉴 클릭 이벤트
+        if (hamburger && nav) {
             hamburger.addEventListener('click', function() {
-                this.classList.toggle('active');
                 nav.classList.toggle('active');
+                this.classList.toggle('active');
             });
-        });
+        }
 
+        // 사용자 삭제 함수
         function deleteUser() {
             const id = document.getElementById('deleteId').value;
             const resultDiv = document.getElementById('deleteResult');
