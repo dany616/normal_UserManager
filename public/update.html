@@ -10,7 +10,7 @@
 </head>
 <body>
     <header class="header">
-        <div class="header-content container">
+        <div class="header-content">
             <a href="/" class="logo">
                 <i class="fas fa-users"></i> User Manager
             </a>
@@ -73,7 +73,14 @@
     </main>
 
     <script>
-        // 햄버거 메뉴 스크립트
+        // 햄버거 메뉴 토글
+        const hamburger = document.getElementById('hamburger');
+        const nav = document.getElementById('nav');
+        
+        hamburger.addEventListener('click', () => {
+            nav.classList.toggle('active');
+            hamburger.classList.toggle('active');
+        });
 
         let currentId = '';
 
